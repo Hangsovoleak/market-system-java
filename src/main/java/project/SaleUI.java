@@ -20,12 +20,15 @@ public class SaleUI {
     private static int selectedCustomerId = -1;
 
     public static void showUI() {
+        UiTheme.apply();
         JFrame frame = new JFrame("Process Sale");
         frame.setSize(800, 500);
-        frame.setLayout(new BorderLayout());
+        JPanel root = UiTheme.createRootPanel();
+        frame.setContentPane(root);
 
         // ===== Top Panel: Select Customer =====
-        JPanel topPanel = new JPanel();
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
+        topPanel.setOpaque(false);
         JComboBox<String> customerCombo = new JComboBox<>();
         for (Customer1 c : customerDAO.getAllCustomers()) {
             customerCombo.addItem(c.getId() + "");
@@ -34,25 +37,25 @@ public class SaleUI {
         topPanel.add(new JLabel("Select Customer ID:"));
         topPanel.add(customerCombo);
 
-        frame.add(topPanel, BorderLayout.NORTH);
+        JPanel northPanel = new JPanel(new BorderLayout(0, 8));
+        northPanel.setOpaque(false);
+        northPanel.add(UiTheme.createTitlePanel("Sale Items"), BorderLayout.NORTH);
+        northPanel.add(topPanel, BorderLayout.SOUTH);
+        root.add(northPanel, BorderLayout.NORTH);
 
         // ===== Center Table: Sale Items =====
         itemModel = new DefaultTableModel(new String[]{"ProductID", "Name", "Qty", "Price", "Subtotal"}, 0);
         itemTable = new JTable(itemModel);
-        frame.add(new JScrollPane(itemTable), BorderLayout.CENTER);
+        UiTheme.styleTable(itemTable);
+        root.add(new JScrollPane(itemTable), BorderLayout.CENTER);
 
         // ===== Buttons =====
-        JPanel panel = new JPanel();
-
         JButton addItemBtn = new JButton("Add Item");
         JButton removeItemBtn = new JButton("Remove Item");
         JButton finalizeBtn = new JButton("Finalize Sale");
 
-        panel.add(addItemBtn);
-        panel.add(removeItemBtn);
-        panel.add(finalizeBtn);
-
-        frame.add(panel, BorderLayout.SOUTH);
+        JPanel buttonRow = UiTheme.createButtonRow(addItemBtn, removeItemBtn, finalizeBtn);
+        root.add(buttonRow, BorderLayout.SOUTH);
 
         // ===== Button Actions =====
         addItemBtn.addActionListener(e -> addItem());

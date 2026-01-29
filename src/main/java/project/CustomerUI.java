@@ -13,26 +13,27 @@ public class CustomerUI {
     private static DefaultTableModel model;
 
     public static void showUI() {
+        UiTheme.apply();
         JFrame frame = new JFrame("Customer Management");
         frame.setSize(600, 400);
-        frame.setLayout(new BorderLayout());
+        JPanel root = UiTheme.createRootPanel();
+        frame.setContentPane(root);
 
         // ===== Table =====
         model = new DefaultTableModel(new String[]{"ID"}, 0);
         table = new JTable(model);
+        UiTheme.styleTable(table);
         refreshTable();
 
-        frame.add(new JScrollPane(table), BorderLayout.CENTER);
+        root.add(UiTheme.createTitlePanel("Customers"), BorderLayout.NORTH);
+        root.add(new JScrollPane(table), BorderLayout.CENTER);
 
         // ===== Buttons =====
-        JPanel panel = new JPanel();
         JButton addBtn = new JButton("Add Customer");
         JButton deleteBtn = new JButton("Delete Customer");
 
-        panel.add(addBtn);
-        panel.add(deleteBtn);
-
-        frame.add(panel, BorderLayout.SOUTH);
+        JPanel buttonRow = UiTheme.createButtonRow(addBtn, deleteBtn);
+        root.add(buttonRow, BorderLayout.SOUTH);
 
         // ===== Button Actions =====
         addBtn.addActionListener(e -> addCustomer());

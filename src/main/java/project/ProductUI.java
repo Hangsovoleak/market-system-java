@@ -11,28 +11,28 @@ public class ProductUI {
     private static DefaultTableModel model;
 
     public static void showUI() {
+        UiTheme.apply();
         JFrame frame = new JFrame("Product Management");
         frame.setSize(700, 400);
-        frame.setLayout(new BorderLayout());
+        JPanel root = UiTheme.createRootPanel();
+        frame.setContentPane(root);
 
         // ===== Table =====
         model = new DefaultTableModel(new String[]{"ID", "Name", "Price", "Qty", "SupplierId"}, 0);
         table = new JTable(model);
+        UiTheme.styleTable(table);
         refreshTable();
 
-        frame.add(new JScrollPane(table), BorderLayout.CENTER);
+        root.add(UiTheme.createTitlePanel("Products"), BorderLayout.NORTH);
+        root.add(new JScrollPane(table), BorderLayout.CENTER);
 
         // ===== Buttons =====
-        JPanel panel = new JPanel();
         JButton addBtn = new JButton("Add");
         JButton updateBtn = new JButton("Update");
         JButton deleteBtn = new JButton("Delete");
 
-        panel.add(addBtn);
-        panel.add(updateBtn);
-        panel.add(deleteBtn);
-
-        frame.add(panel, BorderLayout.SOUTH);
+        JPanel buttonRow = UiTheme.createButtonRow(addBtn, updateBtn, deleteBtn);
+        root.add(buttonRow, BorderLayout.SOUTH);
 
         // ===== Button Actions =====
         addBtn.addActionListener(e -> addProduct());

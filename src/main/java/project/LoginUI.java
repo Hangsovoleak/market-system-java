@@ -12,32 +12,40 @@ public class LoginUI extends JFrame {
     private EmployeeDAO employeeDAO;
 
     public LoginUI() {
+        UiTheme.apply();
         employeeDAO = new EmployeeDAO();
 
         setTitle("SuperMarket Login");
         setSize(400, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Center the window
-        setLayout(new GridBagLayout());
+        JPanel root = UiTheme.createRootPanel();
+        setContentPane(root);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.anchor = GridBagConstraints.WEST;
+
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setOpaque(false);
 
         // Username Label
         gbc.gridx = 0;
         gbc.gridy = 0;
-        add(new JLabel("Username:"), gbc);
+        formPanel.add(new JLabel("Username:"), gbc);
 
         // Username Field
         txtUsername = new JTextField(15);
         gbc.gridx = 1;
-        add(txtUsername, gbc);
+        formPanel.add(txtUsername, gbc);
 
         // Login Button
         btnLogin = new JButton("Login");
-        gbc.gridy = 1;
-        gbc.gridx = 1;
-        add(btnLogin, gbc);
+        JPanel buttonRow = UiTheme.createButtonRow(btnLogin);
+
+        root.add(UiTheme.createTitlePanel("Login"), BorderLayout.NORTH);
+        root.add(formPanel, BorderLayout.CENTER);
+        root.add(buttonRow, BorderLayout.SOUTH);
 
         // Button action
         btnLogin.addActionListener(new ActionListener() {
